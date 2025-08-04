@@ -283,7 +283,7 @@ const GradiAnalyzer = () => {
               <p className="text-xs text-gray-400 mt-2">
                 Try sample URL: <span className="text-cyan-400 cursor-pointer" onClick={() => setYoutubeUrl('https://youtube.com/watch?v=dQw4w9WgXcQ')}>
                   https://youtube.com/watch?v=dQw4w9WgXcQ
-                </span> (for data structures demo)
+                </span> (for demo) | <span className="text-yellow-400">Note:</span> Real analysis may take 30-60 seconds
               </p>
             </CardContent>
           </Card>

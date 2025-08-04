@@ -274,18 +274,52 @@ async def analyze_video(request: VideoAnalysisRequest):
         
         logger.info(f"Starting analysis for video: {video_id}")
         
-        # Step 1: Fetch transcript from Dumpling AI
+        # Step 1: Check cache for existing analysis (within last 7 days)
+        cache_expiry = datetime.utcnow() - timedelta(days=7)
+        cached_analysis = await db.video_analyses.find_one({
+            "youtube_url": request.youtube_url,
+            "created_at": {"$gte": cache_expiry}
+        })
+        
+        if cached_analysis:
+            logger.info(f"Found cached analysis for video: {video_id}")
+            
+            # Add cache metadata to response
+            analysis_result = cached_analysis["analysis_result"]
+            analysis_result["_cache_info"] = {
+                "from_cache": True,
+                "cached_at": cached_analysis["created_at"].isoformat(),
+                "original_duration": cached_analysis["analysis_duration"]
+            }
+            
+            return VideoAnalysisResponse(
+                success=True,
+                data=analysis_result
+            )
+        
+        logger.info(f"No valid cache found, proceeding with fresh analysis for video: {video_id}")
+        
+        # Step 2: Fetch transcript from Dumpling AI
         transcript = await fetch_transcript_dumpling(request.youtube_url)
         if not transcript.strip():
             raise HTTPException(status_code=400, detail="No transcript available for this video")
         
-        # Step 2: Analyze with Gemini
+        # Step 3: Analyze with Gemini
         analysis_result = await analyze_with_gemini(transcript)
         
         # Calculate duration
         duration = (datetime.utcnow() - start_time).total_seconds()
         
-        # Store in database
+        # Add fresh analysis metadata
+        analysis_result["_cache_info"] = {
+            "from_cache": False,
+            "analyzed_at": datetime.utcnow().isoformat(),
+            "analysis_duration": duration
+        }
+        
+        # Step 4: Store in database (remove old entries for same URL)
+        await db.video_analyses.delete_many({"youtube_url": request.youtube_url})
+        
         video_analysis = VideoAnalysis(
             youtube_url=request.youtube_url,
             transcript=transcript,
@@ -294,7 +328,7 @@ async def analyze_video(request: VideoAnalysisRequest):
         )
         await db.video_analyses.insert_one(video_analysis.dict())
         
-        logger.info(f"Analysis completed in {duration:.2f} seconds")
+        logger.info(f"Fresh analysis completed in {duration:.2f} seconds")
         
         return VideoAnalysisResponse(
             success=True,

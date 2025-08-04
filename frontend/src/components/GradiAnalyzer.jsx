@@ -157,27 +157,41 @@ const GradiAnalyzer = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [analysisStage, setAnalysisStage] = useState('');
+  const [error, setError] = useState(null);
 
   const handleAnalysis = async () => {
     if (!youtubeUrl) return;
 
     setIsAnalyzing(true);
     setAnalysisResult(null);
+    setError(null);
 
-    // Simulate analysis stages
-    setAnalysisStage('Fetching transcript from Dumpling AI...');
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    setAnalysisStage('Gradi is analyzing with Gemini AI...');
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    setAnalysisStage('Preparing detailed analysis...');
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Use mock data
-    setAnalysisResult(mockAnalysisData);
-    setIsAnalyzing(false);
-    setAnalysisStage('');
+    try {
+      // Stage 1: Fetching transcript
+      setAnalysisStage('Fetching transcript from Dumpling AI...');
+      
+      // Stage 2: Analyzing
+      setAnalysisStage('Gradi is analyzing with Gemini AI...');
+      
+      // Stage 3: Processing
+      setAnalysisStage('Preparing detailed analysis...');
+      
+      // Make actual API call
+      const response = await apiService.analyzeVideo(youtubeUrl);
+      
+      if (response.success) {
+        setAnalysisResult(response.data);
+      } else {
+        throw new Error(response.error || 'Analysis failed');
+      }
+      
+    } catch (err) {
+      console.error('Analysis error:', err);
+      setError(err.message);
+    } finally {
+      setIsAnalyzing(false);
+      setAnalysisStage('');
+    }
   };
 
   const getOverallScore = () => {

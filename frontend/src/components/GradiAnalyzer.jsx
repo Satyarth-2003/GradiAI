@@ -4,8 +4,8 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { Star, Play, Youtube, Zap, Brain, Target } from 'lucide-react';
-import { mockAnalysisData } from '../data/mockData';
+import { Star, Play, Youtube, Zap, Brain, Target, AlertCircle } from 'lucide-react';
+import { apiService } from '../services/api';
 
 const GradiCharacter = ({ isProcessing, overallScore }) => {
   return (

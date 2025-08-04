@@ -260,6 +260,24 @@ const GradiAnalyzer = () => {
               {isAnalyzing && (
                 <div className="mt-4 text-center">
                   <p className="text-cyan-400 text-sm">{analysisStage}</p>
+                  <p className="text-gray-400 text-xs mt-1">This may take 30-60 seconds for real analysis...</p>
+                </div>
+              )}
+              {error && (
+                <div className="mt-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+                  <div className="flex items-center gap-2 text-red-400">
+                    <AlertCircle className="w-4 h-4" />
+                    <span className="text-sm font-medium">Analysis Error</span>
+                  </div>
+                  <p className="text-red-300 text-sm mt-1">{error}</p>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="mt-2 text-red-400 h-auto p-1"
+                    onClick={() => setError(null)}
+                  >
+                    Dismiss
+                  </Button>
                 </div>
               )}
               <p className="text-xs text-gray-400 mt-2">

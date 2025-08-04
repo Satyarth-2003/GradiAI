@@ -309,6 +309,27 @@ const GradiAnalyzer = () => {
                   <Badge className="bg-purple-600 text-white px-4 py-2 text-lg">
                     {getOverallScoreLabel(getOverallScore())}
                   </Badge>
+                  
+                  {/* Cache Info */}
+                  {analysisResult._cache_info && (
+                    <div className="mt-4 p-3 rounded-lg bg-gray-800/50 border border-gray-600">
+                      {analysisResult._cache_info.from_cache ? (
+                        <div className="flex items-center justify-center gap-2 text-green-400">
+                          <Brain className="w-4 h-4" />
+                          <span className="text-sm">
+                            📋 Cached Result - Previously analyzed on {new Date(analysisResult._cache_info.cached_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-2 text-blue-400">
+                          <Zap className="w-4 h-4" />
+                          <span className="text-sm">
+                            ⚡ Fresh Analysis - Completed in {analysisResult._cache_info.analysis_duration.toFixed(1)}s
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 

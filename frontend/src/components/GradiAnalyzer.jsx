@@ -216,7 +216,7 @@ const GradiAnalyzer = () => {
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-white mb-2 flex items-center justify-center gap-3">
               <Youtube className="w-8 h-8 text-red-500" />
-              YouTube Video Analysis
+              GradiAI
             </h1>
             <p className="text-gray-300">
               Apne educational video ka YouTube link paste karo - Gradi automatic transcript fetch karke detailed analysis dega! 🚀
@@ -234,7 +234,7 @@ const GradiAnalyzer = () => {
             <CardContent className="p-6">
               <div className="flex gap-4">
                 <Input 
-                  placeholder="https://youtube.com/watch?v=dQw4w9WgXcQ"
+                  placeholder="https://youtube.com/watch?v=example"
                   value={youtubeUrl}
                   onChange={(e) => setYoutubeUrl(e.target.value)}
                   className="flex-1 bg-gray-700/50 border-gray-600 text-white placeholder-gray-400"
@@ -260,7 +260,7 @@ const GradiAnalyzer = () => {
               {isAnalyzing && (
                 <div className="mt-4 text-center">
                   <p className="text-cyan-400 text-sm">{analysisStage}</p>
-                  <p className="text-gray-400 text-xs mt-1">This may take 30-60 seconds for real analysis...</p>
+                  <p className="text-gray-400 text-xs mt-1">Real analysis in progress - may take 30-60 seconds...</p>
                 </div>
               )}
               {error && (
@@ -281,9 +281,7 @@ const GradiAnalyzer = () => {
                 </div>
               )}
               <p className="text-xs text-gray-400 mt-2">
-                Try sample URL: <span className="text-cyan-400 cursor-pointer" onClick={() => setYoutubeUrl('https://youtube.com/watch?v=dQw4w9WgXcQ')}>
-                  https://youtube.com/watch?v=dQw4w9WgXcQ
-                </span> (for demo) | <span className="text-yellow-400">Note:</span> Real analysis may take 30-60 seconds
+                <span className="text-yellow-400">Note:</span> Paste any YouTube video URL - Real transcript fetching and AI analysis
               </p>
             </CardContent>
           </Card>
